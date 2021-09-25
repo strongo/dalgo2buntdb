@@ -24,6 +24,9 @@ func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 	keyPath := dalgo.GetRecordKeyPath(key)
 	s, err := t.tx.Get(keyPath)
 	if err != nil {
+		if err == buntdb.ErrNotFound {
+			err = dalgo.NewErrNotFoundByKey(key, err)
+		}
 		return err
 	}
 	return json.Unmarshal([]byte(s), record.Data())
