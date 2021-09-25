@@ -14,15 +14,9 @@ func (dtb database) Set(ctx context.Context, record dalgo.Record) error {
 }
 
 func (dtb database) SetMulti(ctx context.Context, records []dalgo.Record) error {
-	batch := dtb.batch()
-	for _, record := range records {
-		key := record.Key()
-		docRef := dtb.doc(key)
-		data := record.Data()
-		batch.Set(docRef, data)
-	}
-	_, err := batch.Commit(ctx)
-	return err
+	return dtb.db.Update(func(tx *buntdb.Tx) error {
+		return transaction{tx: tx}.SetMulti(ctx, records)
+	})
 }
 
 func (t transaction) Set(ctx context.Context, record dalgo.Record) error {
@@ -32,10 +26,15 @@ func (t transaction) Set(ctx context.Context, record dalgo.Record) error {
 	if err != nil {
 		return err
 	}
-	_, _, err = t.tx.Set(k, s, nil)
+	_, _, err = t.tx.Set(k, string(s), nil)
 	return err
 }
 
 func (t transaction) SetMulti(ctx context.Context, records []dalgo.Record) error {
-	panic("implement me")
+	for _, record := range records {
+		if err := t.Set(ctx, record); err != nil {
+			return err
+		}
+	}
+	return nil
 }

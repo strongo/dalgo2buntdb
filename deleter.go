@@ -6,11 +6,9 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
-func (dtb database) Delete(_ context.Context, key *dalgo.Key) error {
+func (dtb database) Delete(ctx context.Context, key *dalgo.Key) error {
 	return dtb.db.Update(func(tx *buntdb.Tx) error {
-		keyPath := dalgo.GetRecordKeyPath(key)
-		_, err := tx.Delete(keyPath)
-		return err
+		return transaction{tx: tx}.Delete(ctx, key)
 	})
 }
 
@@ -24,4 +22,19 @@ func (dtb database) DeleteMulti(_ context.Context, keys []*dalgo.Key) (err error
 		}
 		return err
 	})
+}
+
+func (t transaction) Delete(ctx context.Context, key *dalgo.Key) error {
+	keyPath := dalgo.GetRecordKeyPath(key)
+	_, err := t.tx.Delete(keyPath)
+	return err
+}
+
+func (t transaction) DeleteMulti(ctx context.Context, keys []*dalgo.Key) error {
+	for _, key := range keys {
+		if err := t.Delete(ctx, key); err != nil {
+			return err
+		}
+	}
+	return nil
 }
