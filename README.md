@@ -1,5 +1,7 @@
 # Go package: [`github.com/strongo/dalgo2buntdb`](https://github.com/strongo/dalgo-buntdb)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/strongo/dalgo2buntdb)](https://goreportcard.com/report/github.com/strongo/dalgo2buntdb)
+
 Bridge to [BuntDB](https://github.com/tidwall/buntdb) API
 for [`github.com/strongo/dalgo`](https://github.com/strongo/dalgo) interface.
 
