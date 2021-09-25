@@ -33,4 +33,10 @@ func TestGetter_Get(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
+	if data.Str != "s1" {
+		t.Errorf("expected 's1' for Str property, got: %v", data.Str)
+	}
+	if data.Int != 1 {
+		t.Errorf("expected 1 for Int property, got: %v", data.Int)
+	}
 }
