@@ -1,4 +1,4 @@
-# [strongo/dalgo-buntdb](https://github.com/strongo/dalgo-buntdb)
+# Go package: [`github.com/strongo/dalgo2buntdb`](https://github.com/strongo/dalgo-buntdb)
 
 Bridge to [BuntDB](https://github.com/tidwall/buntdb) API
 for [`github.com/strongo/dalgo`](https://github.com/strongo/dalgo) interface.
