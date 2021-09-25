@@ -65,7 +65,7 @@ func (t transaction) update(
 		return err
 	}
 	data := make(map[string]interface{})
-	if err = json.Unmarshal([]byte(s), data); err != nil {
+	if err = json.Unmarshal([]byte(s), &data); err != nil {
 		return fmt.Errorf("failed to unmarshal data as JSON object: %v", err)
 	}
 	b, err := json.Marshal(data)
