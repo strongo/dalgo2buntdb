@@ -1,4 +1,4 @@
-module github.com/strongo/dalgo-buntdb
+module github.com/strongo/dalgo2buntdb
 
 go 1.17
 

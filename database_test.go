@@ -1,4 +1,4 @@
-package dalgo_buntdb
+package dalgo2buntdb
 
 import (
 	"github.com/tidwall/buntdb"
