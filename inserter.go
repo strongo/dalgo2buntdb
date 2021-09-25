@@ -8,6 +8,7 @@ import (
 	"github.com/tidwall/buntdb"
 )
 
+// ErrKeyAlreadyExists an error to be used in insert when generated key already exists
 var ErrKeyAlreadyExists = errors.New("key already exists")
 
 func (dtb database) Insert(ctx context.Context, record dalgo.Record, opts ...dalgo.InsertOption) error {
@@ -22,9 +23,8 @@ func (t transaction) Insert(ctx context.Context, record dalgo.Record, opts ...da
 	generateID := options.IDGenerator()
 	if generateID == nil {
 		return t.insert(record)
-	} else {
-		return t.insertWithGenerator(ctx, generateID, record)
 	}
+	return t.insertWithGenerator(ctx, generateID, record)
 }
 
 func (t transaction) insertWithGenerator(ctx context.Context, generateID dalgo.IDGenerator, record dalgo.Record) error {

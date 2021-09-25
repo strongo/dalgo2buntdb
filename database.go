@@ -12,6 +12,7 @@ type database struct {
 
 var _ dalgo.Database = (*database)(nil)
 
+// NewDatabase creates a new instance of DALgo adapter for BungDB
 func NewDatabase(db *buntdb.DB) dalgo.Database {
 	if db == nil {
 		panic("db is a required parameter, got nil")
