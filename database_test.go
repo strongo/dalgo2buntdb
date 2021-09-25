@@ -15,3 +15,11 @@ func TestNewDatabase(t *testing.T) {
 		t.Error("NewDatabase returned nil")
 	}
 }
+
+func openInMemoryDB(t *testing.T) *buntdb.DB {
+	db, err := buntdb.Open(memory)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return db
+}

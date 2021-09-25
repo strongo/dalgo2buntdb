@@ -1,33 +1,11 @@
 package dalgo_buntdb
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
 	"github.com/strongo/dalgo"
+	"github.com/tidwall/buntdb"
 	"testing"
 )
-
-type getterMock struct {
-	getCalled int
-	getter    getter
-}
-
-func newGetterMock() *getterMock {
-	var gm getterMock
-	gm.getter = getter{
-		doc: func(key *dalgo.Key) *firestore.DocumentRef {
-			return nil
-		},
-		get: func(ctx context.Context, docRef *firestore.DocumentRef) (_ *firestore.DocumentSnapshot, err error) {
-			gm.getCalled++
-			return nil, err
-		},
-		dataTo: func(ds *firestore.DocumentSnapshot, p interface{}) error {
-			return nil
-		},
-	}
-	return &gm
-}
 
 type testKind struct {
 	Str string
@@ -35,12 +13,23 @@ type testKind struct {
 }
 
 func TestGetter_Get(t *testing.T) {
-	gm := newGetterMock()
 	ctx := context.Background()
-	key := dalgo.NewKeyWithStrID("TestKind", "TestID")
+
+	const k = "TestKind/test_1"
+	db := openInMemoryDB(t)
+	if err := db.Update(func(tx *buntdb.Tx) error {
+		_, _, err := tx.Set(k, `{"Str":"s1", "Int":1}`, nil)
+		return err
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	ddb := NewDatabase(db)
+
+	key := dalgo.NewKeyWithStrID("TestKind", "test_1")
 	data := new(testKind)
 	record := dalgo.NewRecord(key, data)
-	err := gm.getter.Get(ctx, record)
+	err := ddb.Get(ctx, record)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
