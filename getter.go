@@ -33,13 +33,18 @@ func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 }
 
 func (t transaction) GetMulti(ctx context.Context, records []dalgo.Record) error {
-	for _, rec := range records {
-		keyPath := dalgo.GetRecordKeyPath(rec.Key())
+	for _, record := range records {
+		key := record.Key()
+		keyPath := dalgo.GetRecordKeyPath(key)
 		s, err := t.tx.Get(keyPath)
 		if err != nil {
+			if err == buntdb.ErrNotFound {
+				record.SetError(dalgo.NewErrNotFoundByKey(key, err))
+				continue
+			}
 			return err
 		}
-		return json.Unmarshal([]byte(s), rec.Data())
+		return json.Unmarshal([]byte(s), record.Data())
 	}
 	return nil
 }
