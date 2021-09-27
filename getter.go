@@ -21,7 +21,7 @@ func (dtb database) GetMulti(ctx context.Context, records []dalgo.Record) error 
 
 func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 	key := record.Key()
-	keyPath := dalgo.GetRecordKeyPath(key)
+	keyPath := key.String()
 	s, err := t.tx.Get(keyPath)
 	if err != nil {
 		if err == buntdb.ErrNotFound {
@@ -35,16 +35,18 @@ func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 func (t transaction) GetMulti(ctx context.Context, records []dalgo.Record) error {
 	for _, record := range records {
 		key := record.Key()
-		keyPath := dalgo.GetRecordKeyPath(key)
+		keyPath := key.String()
 		s, err := t.tx.Get(keyPath)
-		if err != nil {
-			if err == buntdb.ErrNotFound {
-				record.SetError(dalgo.NewErrNotFoundByKey(key, err))
-				continue
-			}
+		if err == buntdb.ErrNotFound {
+			record.SetError(dalgo.NewErrNotFoundByKey(key, err))
+			continue
+		} else if err != nil {
 			return err
 		}
-		return json.Unmarshal([]byte(s), record.Data())
+		record.SetError(err)
+		if err = json.Unmarshal([]byte(s), record.Data()); err != nil {
+			record.SetError(err)
+		}
 	}
 	return nil
 }

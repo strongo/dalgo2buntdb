@@ -8,15 +8,23 @@ import (
 
 func (dtb database) Delete(ctx context.Context, key *dalgo.Key) error {
 	return dtb.db.Update(func(tx *buntdb.Tx) error {
-		return transaction{tx: tx}.Delete(ctx, key)
+		err := transaction{tx: tx}.Delete(ctx, key)
+		if err == buntdb.ErrNotFound {
+			err = nil
+		}
+		return err
 	})
 }
 
 func (dtb database) DeleteMulti(_ context.Context, keys []*dalgo.Key) (err error) {
 	return dtb.db.Update(func(tx *buntdb.Tx) error {
 		for _, key := range keys {
-			keyPath := dalgo.GetRecordKeyPath(key)
+			keyPath := key.String()
 			if _, err = tx.Delete(keyPath); err != nil {
+				if err == buntdb.ErrNotFound {
+					err = nil
+					continue
+				}
 				return err
 			}
 		}
@@ -25,7 +33,7 @@ func (dtb database) DeleteMulti(_ context.Context, keys []*dalgo.Key) (err error
 }
 
 func (t transaction) Delete(ctx context.Context, key *dalgo.Key) error {
-	keyPath := dalgo.GetRecordKeyPath(key)
+	keyPath := key.String()
 	_, err := t.tx.Delete(keyPath)
 	return err
 }

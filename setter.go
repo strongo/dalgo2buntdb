@@ -21,7 +21,7 @@ func (dtb database) SetMulti(ctx context.Context, records []dalgo.Record) error 
 
 func (t transaction) Set(ctx context.Context, record dalgo.Record) error {
 	key := record.Key()
-	k := dalgo.GetRecordKeyPath(key)
+	k := key.String()
 	s, err := json.Marshal(record.Data())
 	if err != nil {
 		return err

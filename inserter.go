@@ -44,7 +44,7 @@ func (t transaction) insertWithGenerator(ctx context.Context, generateID dalgo.I
 
 func (t transaction) insert(record dalgo.Record) error {
 	key := record.Key()
-	k := dalgo.GetRecordKeyPath(key)
+	k := key.String()
 	if _, err := t.tx.Get(k); err == nil {
 		return ErrKeyAlreadyExists
 	} else if err != buntdb.ErrNotFound {

@@ -59,7 +59,7 @@ func (t transaction) update(
 	updates []dalgo.Update,
 	preconditions ...dalgo.Precondition,
 ) error {
-	k := dalgo.GetRecordKeyPath(key)
+	k := key.String()
 	s, err := t.tx.Get(k)
 	if err != nil {
 		return err
