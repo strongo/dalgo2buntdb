@@ -62,17 +62,23 @@ func (t transaction) update(
 	k := key.String()
 	s, err := t.tx.Get(k)
 	if err != nil {
+		if err == buntdb.ErrNotFound {
+			err = dalgo.NewErrNotFoundByKey(key, err)
+		}
 		return err
 	}
 	data := make(map[string]interface{})
 	if err = json.Unmarshal([]byte(s), &data); err != nil {
 		return fmt.Errorf("failed to unmarshal data as JSON object: %v", err)
 	}
+	for _, update := range updates {
+		if update.Field != "" {
+			data[update.Field] = update.Value
+		}
+	}
 	b, err := json.Marshal(data)
 	if err != nil {
 		return fmt.Errorf("failed to unmarshal data as JSON object: %v", err)
-	}
-	for range updates {
 	}
 	_, _, err = t.tx.Set(k, string(b), nil)
 	if err != nil {
