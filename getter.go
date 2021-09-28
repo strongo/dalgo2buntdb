@@ -3,6 +3,8 @@ package dalgo2buntdb
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/strongo/dalgo"
 	"github.com/tidwall/buntdb"
 )
@@ -23,14 +25,27 @@ func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 	key := record.Key()
 	keyPath := key.String()
 	s, err := t.tx.Get(keyPath)
-	if err != nil {
+	if err == nil {
+		record.SetError(nil)
+	} else {
 		if err == buntdb.ErrNotFound {
 			err = dalgo.NewErrNotFoundByKey(key, err)
 			record.SetError(err)
 		}
 		return err
 	}
-	return json.Unmarshal([]byte(s), record.Data())
+	data := record.Data()
+	if data == nil {
+		record.SetError(errors.New("no target data object has been provided for unmarshalling"))
+		return nil
+	}
+	err = json.Unmarshal([]byte(s), data)
+	if err != nil {
+		err = fmt.Errorf("failed to unmarshall record data into target of type %T: %w", data, err)
+		record.SetError(err)
+		return err
+	}
+	return nil
 }
 
 func (t transaction) GetMulti(ctx context.Context, records []dalgo.Record) error {
