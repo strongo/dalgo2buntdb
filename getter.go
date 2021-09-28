@@ -26,6 +26,7 @@ func (t transaction) Get(_ context.Context, record dalgo.Record) error {
 	if err != nil {
 		if err == buntdb.ErrNotFound {
 			err = dalgo.NewErrNotFoundByKey(key, err)
+			record.SetError(err)
 		}
 		return err
 	}
