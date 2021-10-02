@@ -57,12 +57,20 @@ func (t transaction) GetMulti(ctx context.Context, records []dalgo.Record) error
 			record.SetError(dalgo.NewErrNotFoundByKey(key, err))
 			continue
 		} else if err != nil {
+			record.SetError(err)
 			return err
 		}
-		record.SetError(err)
-		if err = json.Unmarshal([]byte(s), record.Data()); err != nil {
-			record.SetError(err)
+		record.SetError(nil)
+
+		if data := record.Data(); data != nil {
+			if err = json.Unmarshal([]byte(s), data); err != nil {
+				record.SetError(err)
+			}
+			continue
 		}
+		record.SetDataTo(func(target interface{}) error {
+			return json.Unmarshal([]byte(s), target)
+		})
 	}
 	return nil
 }
