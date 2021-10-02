@@ -17,7 +17,7 @@ func TestInserter_Insert(t *testing.T) {
 	ctx := context.Background()
 	key := dalgo.NewKeyWithStrID("TestKind", "test-id")
 	data := new(testKind)
-	record := dalgo.NewRecord(key, data)
+	record := dalgo.NewRecordWithData(key, data)
 	db := NewDatabase(bdb)
 	if err := db.Insert(ctx, record); err != nil {
 		t.Errorf("expected to be successful, got error: %v", err)

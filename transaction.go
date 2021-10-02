@@ -16,7 +16,11 @@ type transaction struct {
 	tx *buntdb.Tx
 }
 
-func (t transaction) Upsert(_ context.Context, record dalgo.Record) error {
+func (t transaction) Upsert(context.Context, dalgo.Record) error {
+	panic("implement me")
+}
+
+func (t transaction) Select(context.Context, dalgo.Query) (dalgo.Reader, error) {
 	panic("implement me")
 }
 

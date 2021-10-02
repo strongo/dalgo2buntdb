@@ -28,7 +28,7 @@ func TestGetter_Get(t *testing.T) {
 
 	key := dalgo.NewKeyWithStrID("TestKind", "test_1")
 	data := new(testKind)
-	record := dalgo.NewRecord(key, data)
+	record := dalgo.NewRecordWithData(key, data)
 	err := ddb.Get(ctx, record)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
