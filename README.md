@@ -1,6 +1,8 @@
 # Go package: [`github.com/strongo/dalgo2buntdb`](https://github.com/strongo/dalgo2buntdb)
 
+[![Lint, Vet, Build, Test](https://github.com/strongo/dalgo2buntdb/actions/workflows/ci.yml/badge.svg)](https://github.com/strongo/dalgo2buntdb/actions/workflows/ci.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/strongo/dalgo2buntdb)](https://goreportcard.com/report/github.com/strongo/dalgo2buntdb)
+[![GoDoc](https://godoc.org/github.com/strongo/dalgo2buntdb?status.svg)](https://godoc.org/github.com/strongo/dalgo2buntdb)
 
 Bridge to [BuntDB](https://github.com/tidwall/buntdb) API
 for [`github.com/strongo/dalgo`](https://github.com/strongo/dalgo) interface.
@@ -13,7 +15,7 @@ need a dependable database and favor speed over data size.
 
 ## What is `DALgo`?
 
-`DALgo` is a Data Access Layer (in) Go (language).
+[`DALgo`](https://github.com/strongo/dalgo) is a Database Abstraction Layer (in) Go (language).
 
 ## End-to-End testing
 
@@ -22,4 +24,4 @@ from [`github.com/strongo/dalgo-end2end-tests`](https://github.com/strongo/dalgo
 
 ## License
 
-Open source under MIT License & free to use.
+Open source under [MIT License](LICENSE) & free to use.
