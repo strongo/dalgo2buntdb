@@ -62,15 +62,16 @@ func (t transaction) GetMulti(ctx context.Context, records []dalgo.Record) error
 		}
 		record.SetError(nil)
 
-		if data := record.Data(); data != nil {
-			if err = json.Unmarshal([]byte(s), data); err != nil {
-				record.SetError(err)
-			}
-			continue
+		data := record.Data()
+		if data == nil {
+			panic("record.Data() returned null")
+			//record.SetDataTo(func(target interface{}) error {
+			//	return json.Unmarshal([]byte(s), target)
+			//})
 		}
-		record.SetDataTo(func(target interface{}) error {
-			return json.Unmarshal([]byte(s), target)
-		})
+		if err = json.Unmarshal([]byte(s), data); err != nil {
+			record.SetError(err)
+		}
 	}
 	return nil
 }
