@@ -2,7 +2,7 @@ package dalgo2buntdb
 
 import (
 	"context"
-	"github.com/strongo/dalgo"
+	"github.com/strongo/dalgo/dal"
 	"github.com/tidwall/buntdb"
 	"testing"
 )
@@ -26,9 +26,9 @@ func TestGetter_Get(t *testing.T) {
 
 	ddb := NewDatabase(db)
 
-	key := dalgo.NewKeyWithStrID("TestKind", "test_1")
+	key := dal.NewKeyWithStrID("TestKind", "test_1")
 	data := new(testKind)
-	record := dalgo.NewRecordWithData(key, data)
+	record := dal.NewRecordWithData(key, data)
 	err := ddb.Get(ctx, record)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)

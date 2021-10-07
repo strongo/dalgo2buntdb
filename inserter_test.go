@@ -2,7 +2,7 @@ package dalgo2buntdb
 
 import (
 	"context"
-	"github.com/strongo/dalgo"
+	"github.com/strongo/dalgo/dal"
 	"github.com/tidwall/buntdb"
 	"testing"
 )
@@ -15,9 +15,9 @@ func TestInserter_Insert(t *testing.T) {
 		t.Fatalf("failed to open DB: %v", err)
 	}
 	ctx := context.Background()
-	key := dalgo.NewKeyWithStrID("TestKind", "test-id")
+	key := dal.NewKeyWithStrID("TestKind", "test-id")
 	data := new(testKind)
-	record := dalgo.NewRecordWithData(key, data)
+	record := dal.NewRecordWithData(key, data)
 	db := NewDatabase(bdb)
 	if err := db.Insert(ctx, record); err != nil {
 		t.Errorf("expected to be successful, got error: %v", err)

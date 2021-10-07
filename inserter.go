@@ -4,22 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/strongo/dalgo"
+	"github.com/strongo/dalgo/dal"
 	"github.com/tidwall/buntdb"
 )
 
 // ErrKeyAlreadyExists an error to be used in insert when generated key already exists
 var ErrKeyAlreadyExists = errors.New("key already exists")
 
-func (dtb database) Insert(ctx context.Context, record dalgo.Record, opts ...dalgo.InsertOption) error {
+func (dtb database) Insert(ctx context.Context, record dal.Record, opts ...dal.InsertOption) error {
 	return dtb.db.Update(func(tx *buntdb.Tx) error {
 		t := transaction{tx: tx}
 		return t.Insert(ctx, record, opts...)
 	})
 }
 
-func (t transaction) Insert(ctx context.Context, record dalgo.Record, opts ...dalgo.InsertOption) error {
-	options := dalgo.NewInsertOptions(opts...)
+func (t transaction) Insert(ctx context.Context, record dal.Record, opts ...dal.InsertOption) error {
+	options := dal.NewInsertOptions(opts...)
 	generateID := options.IDGenerator()
 	if generateID == nil {
 		return t.insert(record)
@@ -27,7 +27,7 @@ func (t transaction) Insert(ctx context.Context, record dalgo.Record, opts ...da
 	return t.insertWithGenerator(ctx, generateID, record)
 }
 
-func (t transaction) insertWithGenerator(ctx context.Context, generateID dalgo.IDGenerator, record dalgo.Record) error {
+func (t transaction) insertWithGenerator(ctx context.Context, generateID dal.IDGenerator, record dal.Record) error {
 	for i := 0; i < 10; i++ {
 		if err := generateID(ctx, record); err != nil {
 			return err
@@ -42,7 +42,7 @@ func (t transaction) insertWithGenerator(ctx context.Context, generateID dalgo.I
 	return nil
 }
 
-func (t transaction) insert(record dalgo.Record) error {
+func (t transaction) insert(record dal.Record) error {
 	key := record.Key()
 	k := key.String()
 	if _, err := t.tx.Get(k); err == nil {
