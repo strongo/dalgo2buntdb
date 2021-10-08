@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/strongo/dalgo v0.0.0-20211007211258-27794e6c07bd
-	github.com/strongo/dalgo-end2end-tests v0.0.0-20211007204725-c974ed0fe93f
+	github.com/strongo/dalgo-end2end-tests v0.0.0-20211008050209-fd04744c2c68
 	github.com/tidwall/buntdb v1.2.6
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 )
