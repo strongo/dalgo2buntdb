@@ -32,9 +32,12 @@ func (dtb database) DeleteMulti(_ context.Context, keys []*dal.Key) (err error) 
 	})
 }
 
-func (t transaction) Delete(ctx context.Context, key *dal.Key) error {
+func (t transaction) Delete(_ context.Context, key *dal.Key) error {
 	keyPath := key.String()
 	_, err := t.tx.Delete(keyPath)
+	if err == buntdb.ErrNotFound {
+		err = nil
+	}
 	return err
 }
 
