@@ -19,7 +19,10 @@ func TestInserter_Insert(t *testing.T) {
 	data := new(testKind)
 	record := dal.NewRecordWithData(key, data)
 	db := NewDatabase(bdb)
-	if err := db.Insert(ctx, record); err != nil {
+	err = db.RunReadwriteTransaction(ctx, func(ctx context.Context, tx dal.ReadwriteTransaction) error {
+		return tx.Insert(ctx, record)
+	})
+	if err != nil {
 		t.Errorf("expected to be successful, got error: %v", err)
 	}
 	if err := bdb.View(func(tx *buntdb.Tx) error {
