@@ -3,7 +3,7 @@ module github.com/strongo/dalgo2buntdb
 go 1.17
 
 require (
-	github.com/strongo/dalgo v0.0.6
+	github.com/strongo/dalgo v0.0.13
 	github.com/tidwall/buntdb v1.2.9
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 )
